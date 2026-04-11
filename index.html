@@ -1517,32 +1517,23 @@ function makeCard(w, globalIdx) {
       dots.forEach((d, i) => d.classList.toggle('active', i === 0));
     });
 
-    // 手機：左右滑動切換
-    let tcStartX = 0;
-    card.addEventListener('touchstart', e => {
-      tcStartX = e.touches[0].clientX;
-      playActive();
-    }, { passive:true });
-    card.addEventListener('touchmove', e => {
-      const rect = card.getBoundingClientRect();
-      const relX = (e.touches[0].clientX - rect.left) / rect.width;
-      const newIdx = Math.min(Math.max(Math.floor(relX * imgs.length), 0), imgs.length - 1);
-      if (newIdx !== idx) {
-        if (slides[idx].tagName === 'VIDEO') { slides[idx].pause(); slides[idx].currentTime = 0; }
-        slides[idx].classList.remove('active');
-        idx = newIdx;
-        slides[idx].classList.add('active');
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-        playActive();
+    // 手機：下滑換圖
+    if ('ontouchstart' in window) {
+      function syncByScroll() {
+        const rect = card.getBoundingClientRect();
+        const vh   = window.innerHeight;
+        const progress = (vh - rect.top) / (vh + rect.height);
+        const newIdx = Math.min(Math.max(Math.floor(progress * imgs.length), 0), imgs.length - 1);
+        if (newIdx !== idx) {
+          if (slides[idx].tagName === 'VIDEO') { slides[idx].pause(); slides[idx].currentTime = 0; }
+          slides[idx].classList.remove('active');
+          idx = newIdx;
+          slides[idx].classList.add('active');
+          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        }
       }
-    }, { passive:true });
-    card.addEventListener('touchend', () => {
-      pauseAll();
-      slides[idx].classList.remove('active');
-      idx = 0;
-      slides[0].classList.add('active');
-      dots.forEach((d, i) => d.classList.toggle('active', i === 0));
-    }, { passive:true });
+      window.addEventListener('scroll', syncByScroll, { passive:true });
+    }
   }
 
   // stagger in
@@ -1624,16 +1615,16 @@ function makeBigCFCard(list) {
     amountEl.textContent = `NT$ ${list[0].amount.toLocaleString()}`;
   });
 
-  // 手機：左右滑動切換專案
-  let cfTouchStartX = 0;
-  card.addEventListener('touchstart', e => {
-    cfTouchStartX = e.touches[0].clientX;
-  }, { passive:true });
-  card.addEventListener('touchmove', e => {
-    const r = card.getBoundingClientRect();
-    const relX = (e.touches[0].clientX - r.left) / r.width;
-    setIdx(Math.min(Math.max(Math.floor(relX * list.length), 0), list.length - 1));
-  }, { passive:true });
+  // 手機：下滑換專案
+  if ('ontouchstart' in window) {
+    function cfSyncByScroll() {
+      const r  = card.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const progress = (vh - r.top) / (vh + r.height);
+      setIdx(Math.min(Math.max(Math.floor(progress * list.length), 0), list.length - 1));
+    }
+    window.addEventListener('scroll', cfSyncByScroll, { passive:true });
+  }
 
   setTimeout(() => card.classList.add('in'), 30);
   return card;
