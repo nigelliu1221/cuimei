@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>粹美設計 Cuimei Design — 品牌作品集</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;500&family=DM+Serif+Display:ital@0;1&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
@@ -261,7 +262,8 @@ body.is-hovering #cursor-dot { background: var(--accent-hover); }
 }
 
 .hero-sub {
-  font-family:'LXGW WenKai TC',serif;
+  font-family:'Noto Sans TC', sans-serif;
+  font-weight:300;
   font-size: clamp(14px,1.5vw,17px);
   line-height:1.9; color:var(--text-sec);
   margin-bottom:48px; max-width:520px;
@@ -1514,6 +1516,33 @@ function makeCard(w, globalIdx) {
       slides[0].classList.add('active');
       dots.forEach((d, i) => d.classList.toggle('active', i === 0));
     });
+
+    // 手機：左右滑動切換
+    let tcStartX = 0;
+    card.addEventListener('touchstart', e => {
+      tcStartX = e.touches[0].clientX;
+      playActive();
+    }, { passive:true });
+    card.addEventListener('touchmove', e => {
+      const rect = card.getBoundingClientRect();
+      const relX = (e.touches[0].clientX - rect.left) / rect.width;
+      const newIdx = Math.min(Math.max(Math.floor(relX * imgs.length), 0), imgs.length - 1);
+      if (newIdx !== idx) {
+        if (slides[idx].tagName === 'VIDEO') { slides[idx].pause(); slides[idx].currentTime = 0; }
+        slides[idx].classList.remove('active');
+        idx = newIdx;
+        slides[idx].classList.add('active');
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        playActive();
+      }
+    }, { passive:true });
+    card.addEventListener('touchend', () => {
+      pauseAll();
+      slides[idx].classList.remove('active');
+      idx = 0;
+      slides[0].classList.add('active');
+      dots.forEach((d, i) => d.classList.toggle('active', i === 0));
+    }, { passive:true });
   }
 
   // stagger in
@@ -1594,6 +1623,17 @@ function makeBigCFCard(list) {
     clientEl.textContent = t.client;
     amountEl.textContent = `NT$ ${list[0].amount.toLocaleString()}`;
   });
+
+  // 手機：左右滑動切換專案
+  let cfTouchStartX = 0;
+  card.addEventListener('touchstart', e => {
+    cfTouchStartX = e.touches[0].clientX;
+  }, { passive:true });
+  card.addEventListener('touchmove', e => {
+    const r = card.getBoundingClientRect();
+    const relX = (e.touches[0].clientX - r.left) / r.width;
+    setIdx(Math.min(Math.max(Math.floor(relX * list.length), 0), list.length - 1));
+  }, { passive:true });
 
   setTimeout(() => card.classList.add('in'), 30);
   return card;
