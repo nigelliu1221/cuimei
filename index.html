@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>粹美設計 Cuimei Design — 品牌作品集</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;500&family=DM+Serif+Display:ital@0;1&family=LXGW+WenKai+TC&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & CSS VARIABLES
+   ============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:        #faf9f7;
+  --bg2:       #f2efe9;
+  --accent:    #c4a882;
+  --accent-hover: #b09170;
+  --accent-alpha: rgba(196,168,130,0.10);
+  --text:      #1a1a1a;
+  --text-sec:  #6b6b6b;
+  --text-light:#b0a898;
+  --border:    rgba(196,168,130,0.22);
+  --nav-h:     72px;
+  --ease:      cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+#cursor-dot, #cursor-ring {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  transition: opacity .3s;
+}
+#cursor-dot {
+  width: 7px; height: 7px;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+}
+#cursor-ring {
+  width: 38px; height: 38px;
+  border: 1px solid var(--accent);
+  opacity: .5;
+  transform: translate(-50%, -50%);
+  transition: width .35s var(--ease), height .35s var(--ease), opacity .3s, border-color .3s;
+}
+body.is-hovering #cursor-ring {
+  width: 60px; height: 60px;
+  opacity: .25;
+  border-color: var(--text);
+}
+body.is-hovering #cursor-dot { background: var(--accent-hover); }
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 200;
+  transition: transform .05s linear;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+#nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 100;
+  padding: 0 clamp(20px,5vw,80px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(250,249,247,.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transform: translateY(0);
+  transition: transform .45s var(--ease), background .3s;
+}
+#nav.nav-hidden  { transform: translateY(-100%); }
+#nav.nav-scrolled{ background: rgba(250,249,247,.97); }
+
+/* logo */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.nav-logo-img {
+  height: 34px;
+  width: auto;
+  display: block;
+}
+.nav-logo-text { display: flex; flex-direction: column; line-height: 1.15; }
+.nav-logo-text .zh { font-size:16px; font-weight:100; letter-spacing:.14em; color:var(--text); }
+.nav-logo-text .en { font-size:9px;  font-weight:300; letter-spacing:.25em; color:var(--text-sec); text-transform:uppercase; }
+
+/* links */
+.nav-links { display:flex; align-items:center; gap:36px; list-style:none; }
+.nav-links a {
+  font-size:11px; font-weight:300; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--text-sec);
+  text-decoration:none; position:relative;
+  transition:color .3s;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-4px; left:0;
+  width:0; height:1px; background:var(--accent);
+  transition:width .35s var(--ease);
+}
+.nav-links a:hover { color:var(--text); }
+.nav-links a:hover::after { width:100%; }
+
+/* lang toggle */
+.nav-lang { display:flex; align-items:center; gap:6px; margin-left:32px; }
+.lang-btn {
+  background:none; border:none; font-family:'Noto Sans TC',sans-serif;
+  font-size:11px; font-weight:300; letter-spacing:.12em;
+  color:var(--text-light); cursor:none; padding:4px 2px;
+  transition:color .3s;
+}
+.lang-btn.active { color:var(--accent); font-weight:500; }
+.lang-sep { color:var(--border); font-size:12px; }
+
+/* hamburger */
+.hamburger {
+  display:none; flex-direction:column; justify-content:center;
+  gap:5px; background:none; border:none; cursor:none; padding:6px;
+}
+.hamburger span {
+  display:block; width:22px; height:1px; background:var(--text);
+  transition:transform .35s var(--ease), opacity .3s;
+  transform-origin:center;
+}
+.hamburger.open span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
+.hamburger.open span:nth-child(2){ opacity:0; }
+.hamburger.open span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
+
+/* mobile menu */
+.mobile-menu {
+  position:fixed; top:var(--nav-h); left:0; right:0;
+  background:rgba(250,249,247,.97); backdrop-filter:blur(20px);
+  padding:40px clamp(20px,5vw,80px) 48px;
+  z-index:99; border-bottom:1px solid var(--border);
+  transform:translateY(-110%);
+  transition:transform .55s var(--ease);
+}
+.mobile-menu.open { transform:translateY(0); }
+.mobile-menu a {
+  display:block; font-size:32px; font-weight:100; letter-spacing:.08em;
+  color:var(--text); text-decoration:none;
+  padding:14px 0; border-bottom:1px solid var(--border);
+  transition:color .3s, padding-left .3s;
+}
+.mobile-menu a:hover { color:var(--accent); padding-left:12px; }
+.mobile-lang {
+  display:flex; gap:20px; margin-top:28px;
+}
+.mobile-lang .lang-btn { font-size:14px; letter-spacing:.15em; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+#hero {
+  min-height:100vh;
+  padding: calc(var(--nav-h) + 80px) clamp(20px,5vw,80px) 80px;
+  display:flex; align-items:center;
+  position:relative; overflow:hidden;
+}
+
+/* subtle grain texture */
+#hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background-image: radial-gradient(circle at 70% 30%, rgba(196,168,130,.06) 0%, transparent 60%),
+                    radial-gradient(circle at 20% 80%, rgba(196,168,130,.04) 0%, transparent 50%);
+  pointer-events:none;
+}
+
+.hero-deco {
+  position:absolute;
+  right:-1%;
+  top:50%;
+  transform:translateY(-52%);
+  font-family:'Noto Sans TC',sans-serif;
+  font-weight:100;
+  font-size: clamp(150px,20vw,300px);
+  letter-spacing:-.04em;
+  color:var(--text);
+  opacity:.04;
+  pointer-events:none;
+  user-select:none;
+  line-height:1;
+  animation: deco-float 10s ease-in-out infinite;
+}
+@keyframes deco-float {
+  0%,100%{ transform:translateY(-52%) translateX(0); }
+  50%    { transform:translateY(-50%) translateX(-12px); }
+}
+
+.hero-content { max-width:700px; position:relative; z-index:1; }
+
+/* stagger-in animation classes */
+.fade-up {
+  opacity:0; transform:translateY(28px);
+  transition:opacity .9s var(--ease), transform .9s var(--ease);
+}
+.fade-up.d1 { transition-delay:.05s; }
+.fade-up.d2 { transition-delay:.15s; }
+.fade-up.d3 { transition-delay:.25s; }
+.fade-up.d4 { transition-delay:.38s; }
+.fade-up.d5 { transition-delay:.52s; }
+.hero-loaded .fade-up { opacity:1; transform:none; }
+
+.hero-eyebrow {
+  font-size:11px; font-weight:300; letter-spacing:.35em;
+  text-transform:uppercase; color:var(--accent);
+  margin-bottom:28px; display:block;
+}
+
+.hero-title {
+  font-weight:100;
+  font-size: clamp(32px,4.8vw,60px);
+  line-height:1.3; letter-spacing:.02em;
+  margin-bottom:28px;
+}
+.hero-title em {
+  font-style:normal; color:var(--accent); font-weight:500;
+  position:relative;
+}
+.hero-title em::after {
+  content:'';
+  position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:var(--accent); opacity:.3;
+}
+
+.hero-sub {
+  font-family:'Noto Sans TC', sans-serif;
+  font-weight:300;
+  font-size: clamp(14px,1.5vw,17px);
+  line-height:1.9; color:var(--text-sec);
+  margin-bottom:48px; max-width:520px;
+}
+
+.hero-cta { display:flex; gap:14px; flex-wrap:wrap; }
+
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:14px 28px; border-radius:2px;
+  font-family:'Noto Sans TC',sans-serif;
+  font-size:11px; font-weight:300; letter-spacing:.2em;
+  text-transform:uppercase; text-decoration:none;
+  cursor:none; border:none;
+  transition:all .35s var(--ease);
+}
+.btn-primary {
+  background:var(--text); color:var(--bg);
+}
+.btn-primary:hover {
+  background:var(--accent); color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(196,168,130,.35);
+}
+.btn-outline {
+  background:transparent; color:var(--text);
+  border:1px solid var(--border);
+}
+.btn-outline:hover {
+  border-color:var(--accent); color:var(--accent);
+  transform:translateY(-2px);
+}
+
+.hero-stats {
+  display:flex; gap:clamp(28px,5vw,64px);
+  margin-top:72px; padding-top:40px;
+  border-top:1px solid var(--border);
+}
+.stat-item {
+  cursor:none;
+  transition:transform .45s var(--ease);
+}
+.stat-item:hover { transform:translateY(-8px); }
+
+.stat-num {
+  font-family:'Noto Sans TC', sans-serif;
+  font-weight:100;
+  font-size:clamp(40px,5vw,66px);
+  line-height:1; letter-spacing:-.01em;
+  color:var(--accent);
+  display:inline-block;
+  transition:color .45s var(--ease), transform .45s var(--ease);
+}
+.stat-item:hover .stat-num {
+  color:var(--text);
+  transform:scale(1.08);
+}
+
+.stat-label {
+  font-size:12px; font-weight:300; letter-spacing:.1em;
+  color:var(--text-sec);
+  margin-top:10px;
+  position:relative;
+  display:inline-block;
+  transition:color .45s var(--ease);
+}
+.stat-label::after {
+  content:'';
+  position:absolute; bottom:-3px; left:0;
+  height:1px; width:0;
+  background:var(--accent);
+  transition:width .45s var(--ease);
+}
+.stat-item:hover .stat-label { color:var(--text); }
+.stat-item:hover .stat-label::after { width:100%; }
+
+/* ============================================================
+   TICKER / MARQUEE
+   ============================================================ */
+.ticker-wrap {
+  overflow:hidden;
+  padding:18px 0;
+  background:var(--text);
+  border-top:1px solid rgba(255,255,255,.05);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.ticker {
+  display:flex; gap:0;
+  animation:ticker-scroll 28s linear infinite;
+  white-space:nowrap;
+}
+.ticker-item {
+  display:inline-flex; align-items:center; gap:24px;
+  font-size:11px; font-weight:300; letter-spacing:.3em;
+  text-transform:uppercase; color:rgba(250,249,247,.4);
+  padding:0 32px; flex-shrink:0;
+}
+.ticker-dot {
+  width:4px; height:4px; border-radius:50%;
+  background:var(--accent); opacity:.6; flex-shrink:0;
+}
+@keyframes ticker-scroll {
+  from { transform:translateX(0); }
+  to   { transform:translateX(-50%); }
+}
+
+/* ============================================================
+   SECTION COMMON
+   ============================================================ */
+section { padding:clamp(80px,10vw,140px) clamp(20px,5vw,80px); }
+
+.sec-label {
+  display:block; font-size:10px; font-weight:300;
+  letter-spacing:.42em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:14px;
+}
+.sec-title {
+  font-weight:100; font-size:clamp(28px,3.8vw,48px);
+  letter-spacing:.02em; line-height:1.25; margin-bottom:14px;
+}
+.sec-desc {
+  font-family:'LXGW WenKai TC',serif;
+  font-size:15px; line-height:1.85;
+  color:var(--text-sec); max-width:540px;
+}
+
+/* ============================================================
+   REVEAL ANIMATION
+   ============================================================ */
+.reveal {
+  opacity:0; transform:translateY(30px);
+  transition:opacity .85s var(--ease), transform .85s var(--ease);
+}
+.reveal.in { opacity:1; transform:none; }
+.reveal.d1{ transition-delay:.08s; }
+.reveal.d2{ transition-delay:.16s; }
+.reveal.d3{ transition-delay:.24s; }
+.reveal.d4{ transition-delay:.32s; }
+
+/* ============================================================
+   SERVICES
+   ============================================================ */
+#services { background:var(--bg); }
+
+.services-header {
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:end;
+  gap:32px;
+  margin-bottom:60px;
+}
+@media(max-width:700px){ .services-header{ grid-template-columns:1fr; } }
+
+.services-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border:1px solid var(--border);
+  border-radius:3px;
+  overflow:hidden;
+}
+.service-cell {
+  padding:clamp(32px,4vw,56px);
+  border-right:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  position:relative; overflow:hidden;
+  transition:background .45s var(--ease);
+}
+.service-cell:nth-child(2n)  { border-right:none; }
+.service-cell:nth-last-child(-n+2) { border-bottom:none; }
+
+.service-cell::before {
+  content:'';
+  position:absolute; inset:0;
+  background:var(--accent-alpha);
+  transform:scaleY(0); transform-origin:bottom;
+  transition:transform .55s var(--ease);
+}
+.service-cell:hover::before { transform:scaleY(1); }
+
+.service-num {
+  font-family:'DM Serif Display',serif;
+  font-size:11px; letter-spacing:.2em;
+  color:var(--text-light); margin-bottom:20px;
+  display:block; position:relative;
+}
+.service-title {
+  font-size:clamp(16px,1.8vw,22px);
+  font-weight:100; letter-spacing:.06em;
+  margin-bottom:12px; position:relative;
+  transition:color .3s;
+}
+.service-cell:hover .service-title { color:var(--accent); }
+.service-desc {
+  font-family:'LXGW WenKai TC',serif;
+  font-size:13px; line-height:1.85;
+  color:var(--text-sec); position:relative;
+}
+.service-tags {
+  display:flex; flex-wrap:wrap; gap:6px;
+  margin-top:20px; position:relative;
+}
+.service-tag {
+  font-size:9px; font-weight:300; letter-spacing:.15em;
+  padding:4px 10px; border:1px solid var(--border);
+  border-radius:20px; color:var(--text-light);
+  text-transform:uppercase; transition:all .3s;
+}
+.service-cell:hover .service-tag {
+  border-color:var(--accent); color:var(--accent);
+}
+
+/* ============================================================
+   WORK
+   ============================================================ */
+#work { background:var(--bg); }
+
+.work-header { margin-bottom:40px; }
+
+.filter-bar { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:48px; }
+.filter-btn {
+  background:none;
+  border:1px solid var(--border);
+  font-family:'Noto Sans TC',sans-serif;
+  font-size:11px; font-weight:300; letter-spacing:.15em;
+  padding:8px 20px; border-radius:2px;
+  color:var(--text-sec); cursor:none;
+  transition:all .3s var(--ease);
+}
+.filter-btn:hover { border-color:var(--text-light); color:var(--text); }
+.filter-btn.active {
+  background:var(--text); border-color:var(--text); color:var(--bg);
+}
+
+/* group layout */
+.work-group { margin-bottom:52px; }
+.work-group:last-child { margin-bottom:0; }
+.work-group-header {
+  display:flex; align-items:center; gap:16px;
+  margin-bottom:16px;
+}
+.work-group-label {
+  font-size:10px; font-weight:300; letter-spacing:.4em;
+  text-transform:uppercase; color:var(--text-light);
+  white-space:nowrap; flex-shrink:0;
+}
+.work-group-line { flex:1; height:1px; background:var(--border); }
+
+/* grid */
+.work-grid { display:block; }
+.work-grid-inner {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.work-grid-inner .work-card.wide { grid-column:span 2; }
+
+.work-card {
+  position:relative; overflow:hidden;
+  background:var(--bg2); border-radius:2px;
+  cursor:none;
+  opacity:0; transform:scale(.97) translateY(16px);
+  transition:opacity .55s var(--ease), transform .55s var(--ease);
+}
+.work-card.in { opacity:1; transform:none; }
+
+.work-img {
+  width:100%; aspect-ratio:4/3;
+  position:relative; overflow:hidden;
+  background:var(--bg2);
+  transition:transform .8s var(--ease);
+}
+.work-card.wide .work-img { aspect-ratio:8/4; }
+.work-card:hover .work-img { transform:scale(1.06); }
+
+.work-img-slide {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover; object-position:center;
+  opacity:0;
+  transition:opacity .12s ease;
+  display:block;
+}
+.work-img-slide.active { opacity:1; }
+.work-img-slide.broken { display:none; }
+
+/* video badge */
+.work-vid-badge {
+  position:absolute; top:14px; left:14px; z-index:12;
+  font-size:9px; letter-spacing:.12em;
+  color:rgba(255,255,255,.85);
+  background:rgba(0,0,0,.32);
+  border-radius:20px; padding:4px 10px;
+  backdrop-filter:blur(8px);
+  pointer-events:none;
+}
+
+/* image dots */
+.img-dots {
+  position:absolute; bottom:12px; left:50%;
+  transform:translateX(-50%);
+  display:flex; gap:5px; z-index:10;
+  opacity:0; transition:opacity .3s;
+  pointer-events:none;
+}
+.work-card:hover .img-dots { opacity:1; }
+.img-dot {
+  width:5px; height:5px; border-radius:50%;
+  background:rgba(255,255,255,.35);
+  transition:background .3s, transform .3s;
+}
+.img-dot.active { background:#fff; transform:scale(1.3); }
+
+.work-cat-badge {
+  position:absolute; top:14px; right:14px;
+  font-size:9px; font-weight:300; letter-spacing:.2em;
+  text-transform:uppercase; padding:4px 10px;
+  background:rgba(250,249,247,.92); border-radius:20px;
+  color:var(--text-sec);
+  backdrop-filter:blur(8px);
+}
+
+.work-overlay {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:28px 24px 48px;
+  background:linear-gradient(to top,rgba(18,18,18,.88) 0%,transparent 100%);
+  opacity:0; transform:translateY(8px);
+  transition:opacity .4s var(--ease), transform .4s var(--ease);
+}
+.work-card:hover .work-overlay { opacity:1; transform:none; }
+
+.work-card-title {
+  font-size:15px; font-weight:100; letter-spacing:.04em;
+  color:#fff; margin-bottom:4px;
+}
+.work-card-client {
+  font-size:10px; font-weight:300; letter-spacing:.18em;
+  text-transform:uppercase; color:rgba(255,255,255,.45);
+}
+.work-card-amount {
+  font-size:11px; font-weight:400; letter-spacing:.06em;
+  color:rgba(255,255,255,.7); margin-top:7px;
+}
+
+/* contain mode – show full image without cropping */
+.work-card.contain .work-img {
+  aspect-ratio:3/4;
+}
+.work-card.contain .work-img-slide {
+  object-fit:contain;
+}
+.work-card.contain:hover .work-img { transform:none; }
+
+/* ── Crowdfunding big card ───────────────────────────────── */
+.cf-bigcard {
+  grid-column: 1 / -1;
+}
+.cf-bigcard .work-img {
+  aspect-ratio: 16/9;
+}
+.cf-bigcard .work-img-slide {
+  object-fit: contain;
+}
+.cf-bigcard:hover .work-img { transform: none; }
+
+/* ============================================================
+   AWARDS
+   ============================================================ */
+#awards { background:var(--bg2); }
+
+.awards-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  border-top:1px solid var(--border);
+  margin-top:48px;
+}
+.award-row {
+  display:flex; gap:20px;
+  padding:22px 32px 22px 0;
+  border-bottom:1px solid var(--border);
+  align-items:flex-start;
+  opacity:0; transform:translateX(-16px);
+  transition:opacity .6s var(--ease), transform .6s var(--ease);
+}
+.award-row.in { opacity:1; transform:none; }
+.award-row:nth-child(even) { padding:22px 0 22px 32px; }
+
+.award-year {
+  font-family:'DM Serif Display',serif;
+  font-size:13px; letter-spacing:.04em;
+  color:var(--accent); min-width:44px; flex-shrink:0;
+  padding-top:2px;
+}
+.award-info {}
+.award-name {
+  font-size:13px; font-weight:100;
+  letter-spacing:.02em; line-height:1.5;
+  margin-bottom:3px;
+}
+.award-item {
+  font-family:'LXGW WenKai TC',serif;
+  font-size:12px; color:var(--text-light);
+}
+
+/* ============================================================
+   PARTNERS
+   ============================================================ */
+#partners {
+  background:var(--bg);
+  padding-top:clamp(60px,8vw,100px);
+  padding-bottom:clamp(60px,8vw,100px);
+}
+.partners-inner { text-align:center; }
+.partners-inner .sec-label { display:block; }
+.partners-inner .sec-title { margin-bottom:48px; }
+
+.logos-wrap {
+  display:flex; flex-wrap:wrap;
+  justify-content:center; align-items:center;
+  gap:clamp(28px,4vw,56px);
+  padding:40px clamp(20px,5vw,80px);
+  border:1px solid var(--border);
+  border-radius:3px;
+  background:var(--bg);
+}
+.partner-logo {
+  height:clamp(26px,3vw,38px);
+  width:auto; max-width:140px;
+  object-fit:contain;
+  filter:grayscale(1) opacity(.4);
+  transition:filter .4s;
+  cursor:none;
+}
+.partner-logo:hover { filter:grayscale(0) opacity(1); }
+.partner-fallback {
+  font-size:12px; font-weight:300;
+  letter-spacing:.18em; text-transform:uppercase;
+  color:var(--text-light); transition:color .3s;
+  cursor:none;
+}
+.partner-fallback:hover { color:var(--text); }
+
+/* ============================================================
+   CTA / CONTACT
+   ============================================================ */
+#contact {
+  background:var(--text); color:var(--bg);
+  text-align:center;
+  padding:clamp(80px,12vw,160px) clamp(20px,5vw,80px);
+}
+#contact .sec-label { color:var(--accent); }
+#contact .sec-title {
+  color:var(--bg); font-size:clamp(28px,4.5vw,60px);
+  margin-bottom:32px;
+}
+.cta-divider {
+  width:48px; height:1px; background:var(--accent);
+  margin:0 auto 40px; opacity:.5;
+}
+.cta-email {
+  display:inline-block;
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(18px,2.8vw,30px);
+  color:var(--accent); text-decoration:none;
+  border-bottom:1px solid rgba(196,168,130,.25);
+  padding-bottom:4px;
+  letter-spacing:.03em;
+  transition:border-color .3s, color .3s;
+}
+.cta-email:hover { border-color:var(--accent); color:#fff; }
+.cta-sub {
+  font-family:'LXGW WenKai TC',serif;
+  font-size:14px; color:rgba(250,249,247,.38);
+  line-height:1.9; margin-top:32px;
+}
+.cta-tags {
+  display:flex; justify-content:center;
+  flex-wrap:wrap; gap:10px; margin-top:48px;
+}
+.cta-tag {
+  font-size:10px; font-weight:300; letter-spacing:.2em;
+  text-transform:uppercase; padding:7px 16px;
+  border:1px solid rgba(196,168,130,.2);
+  border-radius:20px; color:rgba(250,249,247,.35);
+  transition:all .3s;
+}
+.cta-tag:hover {
+  border-color:var(--accent); color:var(--accent);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background:var(--text);
+  padding:28px clamp(20px,5vw,80px);
+  border-top:1px solid rgba(255,255,255,.05);
+  display:flex; align-items:center;
+  justify-content:space-between; flex-wrap:wrap; gap:14px;
+}
+.footer-copy {
+  font-size:10px; font-weight:300; letter-spacing:.1em;
+  color:rgba(250,249,247,.25);
+}
+.footer-links { display:flex; gap:24px; }
+.footer-links a {
+  font-size:10px; font-weight:300;
+  letter-spacing:.18em; text-transform:uppercase;
+  text-decoration:none; color:rgba(250,249,247,.25);
+  transition:color .3s;
+}
+.footer-links a:hover { color:var(--accent); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:900px){
+  .nav-links, .nav-lang { display:none; }
+  .hamburger { display:flex; }
+  .services-grid { grid-template-columns:1fr; }
+  .service-cell { border-right:none !important; }
+  .work-grid-inner { grid-template-columns:1fr 1fr; }
+  .work-grid-inner .work-card.wide { grid-column:span 2; }
+  .awards-grid { grid-template-columns:1fr; }
+  .award-row:nth-child(even){ padding:22px 0 22px 0; }
+  .award-row { padding:22px 0; }
+}
+@media(max-width:580px){
+  .work-grid-inner { grid-template-columns:1fr; }
+  .work-grid-inner .work-card.wide { grid-column:span 1; }
+  .work-grid-inner .work-card.wide .work-img { aspect-ratio:4/3; }
+  .hero-stats { flex-wrap:wrap; gap:20px; }
+  footer { flex-direction:column; align-items:flex-start; }
+  .logos-wrap { gap:20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div id="progress-bar"></div>
+
+<!-- Custom cursor -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <img src="logo.png" alt="粹美設計" class="nav-logo-img" onerror="this.style.display='none'">
+    <div class="nav-logo-text">
+      <span class="zh">粹美設計</span>
+      <span class="en">Cuimei Design</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#services" data-zh="服務" data-en="Services">服務</a></li>
+    <li><a href="#work"     data-zh="作品" data-en="Work">作品</a></li>
+    <li><a href="#awards"   data-zh="獎項" data-en="Awards">獎項</a></li>
+    <li><a href="#contact"  data-zh="聯繫" data-en="Contact">聯繫</a></li>
+  </ul>
+
+  <div class="nav-lang">
+    <button class="lang-btn active" data-lang="zh">中</button>
+    <span class="lang-sep">／</span>
+    <button class="lang-btn" data-lang="en">EN</button>
+  </div>
+
+  <button class="hamburger" id="hamburger" aria-label="選單">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" data-zh="服務" data-en="Services">服務</a>
+  <a href="#work"     data-zh="作品" data-en="Work">作品</a>
+  <a href="#awards"   data-zh="獎項" data-en="Awards">獎項</a>
+  <a href="#contact"  data-zh="聯繫" data-en="Contact">聯繫</a>
+  <div class="mobile-lang">
+    <button class="lang-btn active" data-lang="zh">中文</button>
+    <button class="lang-btn" data-lang="en">English</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="hero">
+  <div class="hero-deco">粹美</div>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow fade-up d1"
+          data-zh="品牌設計 · 群眾募資 · 產品開發"
+          data-en="Brand Design · Crowdfunding · Product Development">
+      品牌設計 · 群眾募資 · 產品開發
+    </span>
+
+    <h1 class="hero-title fade-up d2">
+      <span data-zh="我們也是品牌主，<br>所以<em>懂你在想什麼</em>"
+            data-en="We're brand owners too.<br>We know what keeps you <em>up at night.</em>">
+        我們也是品牌主，<br>所以<em>懂你在想什麼</em>
+      </span>
+    </h1>
+
+    <p class="hero-sub fade-up d3"
+       data-zh="走過從零到上架的每一步，知道哪些彎路可以省。自有品牌 + 客戶服務，實戰經驗兩條線並行。"
+       data-en="We've walked every step from zero to shelf — we know which detours to skip. Own brands + client services, battle-tested on both fronts.">
+      走過從零到上架的每一步，知道哪些彎路可以省。自有品牌 + 客戶服務，實戰經驗兩條線並行。
+    </p>
+
+    <div class="hero-cta fade-up d4">
+      <a href="#work"    class="btn btn-primary"  data-zh="查看作品" data-en="View Work">查看作品</a>
+      <a href="#contact" class="btn btn-outline"  data-zh="開始合作" data-en="Get In Touch">開始合作</a>
+    </div>
+
+    <div class="hero-stats fade-up d5">
+      <div class="stat-item">
+        <div class="stat-num" data-target="15" data-suffix="+">0</div>
+        <div class="stat-label" data-zh="設計獎項" data-en="Design Awards">設計獎項</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-target="3000" data-suffix="萬+">0</div>
+        <div class="stat-label" data-zh="累計群募 NTD" data-en="Total Raised NTD">累計群募 NTD</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num" data-target="20" data-suffix="+">0</div>
+        <div class="stat-label" data-zh="年設計資歷" data-en="Years Experience">年設計資歷</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TICKER
+     ============================================================ -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker" id="ticker">
+    <!-- JS will populate -->
+  </div>
+</div>
+
+<!-- ============================================================
+     SERVICES
+     ============================================================ -->
+<section id="services">
+  <div class="services-header">
+    <div class="reveal">
+      <span class="sec-label" data-zh="我們的服務" data-en="What We Do">我們的服務</span>
+      <h2 class="sec-title" data-zh="走過整條路，<br>才能帶你走捷徑" data-en="We've walked the whole road —<br>so we can find you shortcuts">走過整條路，<br>才能帶你走捷徑</h2>
+    </div>
+    <p class="sec-desc reveal d1"
+       data-zh="市場上設計公司很多，但自己開過模、跑過募資、被通路退過貨的沒幾間。這是粹美的核心差異。"
+       data-en="There's no shortage of design agencies. But very few have opened molds, run crowdfunding campaigns, and been rejected by retailers themselves.">
+      市場上設計公司很多，但自己開過模、跑過募資、被通路退過貨的沒幾間。這是粹美的核心差異。
+    </p>
+  </div>
+
+  <div class="services-grid reveal d2">
+    <div class="service-cell">
+      <span class="service-num">01</span>
+      <h3 class="service-title" data-zh="產品設計" data-en="Product Design">產品設計</h3>
+      <p class="service-desc" data-zh="從概念草圖到量產導入，工業設計、結構開發、原型製作，全程陪跑不只給建議。" data-en="From concept sketch to mass production — industrial design, structural development, prototyping, every step of the way.">從概念草圖到量產導入，工業設計、結構開發、原型製作，全程陪跑不只給建議。</p>
+      <div class="service-tags">
+        <span class="service-tag">工業設計</span>
+        <span class="service-tag">結構開發</span>
+        <span class="service-tag">原型製作</span>
+        <span class="service-tag">量產導入</span>
+      </div>
+    </div>
+    <div class="service-cell">
+      <span class="service-num">02</span>
+      <h3 class="service-title" data-zh="群眾募資" data-en="Crowdfunding">群眾募資</h3>
+      <p class="service-desc" data-zh="頁面設計、影片拍攝、成本規劃、廣告投放，自己跑過才懂怎麼陪客戶跑。" data-en="Page design, video production, cost planning, ad campaigns. We've done it ourselves — that's why we know how to run yours.">頁面設計、影片拍攝、成本規劃、廣告投放，自己跑過才懂怎麼陪客戶跑。</p>
+      <div class="service-tags">
+        <span class="service-tag">頁面設計</span>
+        <span class="service-tag">影片製作</span>
+        <span class="service-tag">廣告投放</span>
+        <span class="service-tag">成本規劃</span>
+      </div>
+    </div>
+    <div class="service-cell">
+      <span class="service-num">03</span>
+      <h3 class="service-title" data-zh="包裝與品牌" data-en="Packaging & Brand">包裝與品牌</h3>
+      <p class="service-desc" data-zh="品牌識別、包裝結構、低碳包裝、品牌聯名，讓你的產品在貨架上說自己的故事。" data-en="Brand identity, packaging structure, eco packaging, brand collaborations — make your product tell its own story on the shelf.">品牌識別、包裝結構、低碳包裝、品牌聯名，讓你的產品在貨架上說自己的故事。</p>
+      <div class="service-tags">
+        <span class="service-tag">品牌識別</span>
+        <span class="service-tag">包裝結構</span>
+        <span class="service-tag">低碳包裝</span>
+        <span class="service-tag">品牌聯名</span>
+      </div>
+    </div>
+    <div class="service-cell">
+      <span class="service-num">04</span>
+      <h3 class="service-title" data-zh="內容行銷" data-en="Content Marketing">內容行銷</h3>
+      <p class="service-desc" data-zh="社群經營、內容策略、KOL 合作，用真實故事建立品牌溫度，不是流量遊戲。" data-en="Social media, content strategy, KOL partnerships — building brand warmth through authentic storytelling, not vanity metrics.">社群經營、內容策略、KOL 合作，用真實故事建立品牌溫度，不是流量遊戲。</p>
+      <div class="service-tags">
+        <span class="service-tag">社群經營</span>
+        <span class="service-tag">內容策略</span>
+        <span class="service-tag">KOL 合作</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     WORK
+     ============================================================ -->
+<section id="work">
+  <div class="work-header reveal">
+    <span class="sec-label" data-zh="精選作品" data-en="Selected Work">精選作品</span>
+    <h2 class="sec-title" data-zh="用作品說話" data-en="The Work Speaks">用作品說話</h2>
+  </div>
+
+  <div class="filter-bar reveal d1" id="filterBar">
+    <button class="filter-btn active" data-filter="all"          data-zh="全部"   data-en="All">全部</button>
+    <button class="filter-btn"        data-filter="product"      data-zh="產品設計" data-en="Product Design">產品設計</button>
+    <button class="filter-btn"        data-filter="crowdfunding" data-zh="群眾募資" data-en="Crowdfunding">群眾募資</button>
+    <button class="filter-btn"        data-filter="packaging"    data-zh="包裝設計" data-en="Packaging">包裝設計</button>
+    <button class="filter-btn"        data-filter="brand"        data-zh="品牌設計" data-en="Brand Design">品牌設計</button>
+  </div>
+
+  <div class="work-grid" id="workGrid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- ============================================================
+     AWARDS
+     ============================================================ -->
+<section id="awards">
+  <div class="reveal">
+    <span class="sec-label" data-zh="榮耀紀錄" data-en="Recognition">榮耀紀錄</span>
+    <h2 class="sec-title" data-zh="國際設計獎項" data-en="Awards &amp; Recognition">國際設計獎項</h2>
+  </div>
+  <div class="awards-grid" id="awardsGrid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- ============================================================
+     PARTNERS
+     ============================================================ -->
+<section id="partners">
+  <div class="partners-inner">
+    <div class="reveal">
+      <span class="sec-label" data-zh="合作夥伴" data-en="Trusted By">合作夥伴</span>
+      <h2 class="sec-title" data-zh="與好品牌同行" data-en="In Good Company">與好品牌同行</h2>
+    </div>
+    <div class="logos-wrap reveal d1" id="logosWrap">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CTA / CONTACT
+     ============================================================ -->
+<section id="contact">
+  <span class="sec-label" data-zh="聯繫我們" data-en="Get In Touch">聯繫我們</span>
+  <h2 class="sec-title reveal"
+      data-zh="帶著你的想法來找我們"
+      data-en="Bring us your idea">帶著你的想法來找我們</h2>
+  <div class="cta-divider reveal d1"></div>
+  <a href="mailto:service@cuimei.tw" class="cta-email reveal d2">service@cuimei.tw</a>
+  <p class="cta-sub reveal d3"
+     data-zh="產品開發 · 募資企劃 · 品牌合作"
+     data-en="Product development · Crowdfunding · Brand collaboration">
+    產品開發 · 募資企劃 · 品牌合作
+  </p>
+  <div class="cta-tags reveal d4">
+    <span class="cta-tag" data-zh="產品設計" data-en="Product Design">產品設計</span>
+    <span class="cta-tag" data-zh="群眾募資" data-en="Crowdfunding">群眾募資</span>
+    <span class="cta-tag" data-zh="品牌識別" data-en="Brand Identity">品牌識別</span>
+    <span class="cta-tag" data-zh="包裝設計" data-en="Packaging">包裝設計</span>
+    <span class="cta-tag" data-zh="內容行銷" data-en="Content Marketing">內容行銷</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <p class="footer-copy" data-zh="© 2024 粹美設計 Cuimei Design. All rights reserved." data-en="© 2024 粹美設計 Cuimei Design. All rights reserved.">© 2024 粹美設計 Cuimei Design. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="https://shop.cuimei.tw" target="_blank" rel="noopener" data-zh="商店" data-en="Shop">商店</a>
+    <a href="#" data-zh="Instagram" data-en="Instagram">Instagram</a>
+    <a href="#" data-zh="Facebook"  data-en="Facebook">Facebook</a>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+/* ─── CURSOR ─────────────────────────────────────────────── */
+const $dot  = document.getElementById('cursor-dot');
+const $ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+document.addEventListener('mouseleave', () => { $dot.style.opacity = '0'; $ring.style.opacity = '0'; });
+document.addEventListener('mouseenter', () => { $dot.style.opacity = '1'; $ring.style.opacity = ''; });
+
+(function animCursor() {
+  rx += (mx - rx) * .12; ry += (my - ry) * .12;
+  $dot.style.left  = mx + 'px'; $dot.style.top  = my + 'px';
+  $ring.style.left = rx + 'px'; $ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+})();
+
+document.querySelectorAll('a,button,.work-card,.filter-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('is-hovering'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('is-hovering'));
+});
+
+/* ─── PROGRESS BAR ───────────────────────────────────────── */
+const $bar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+  $bar.style.transform = `scaleX(${pct})`;
+}, { passive:true });
+
+/* ─── NAV HIDE/SHOW ──────────────────────────────────────── */
+const $nav = document.getElementById('nav');
+let lastY = 0;
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  $nav.classList.toggle('nav-scrolled', y > 60);
+  if (y > 120) {
+    $nav.classList.toggle('nav-hidden', y > lastY + 4);
+    if (y < lastY - 4) $nav.classList.remove('nav-hidden');
+  } else {
+    $nav.classList.remove('nav-hidden');
+  }
+  lastY = y;
+}, { passive:true });
+
+/* ─── HAMBURGER ──────────────────────────────────────────── */
+const $hb   = document.getElementById('hamburger');
+const $mmenu= document.getElementById('mobileMenu');
+$hb.addEventListener('click', () => {
+  $hb.classList.toggle('open');
+  $mmenu.classList.toggle('open');
+});
+document.querySelectorAll('.mobile-menu a').forEach(a => {
+  a.addEventListener('click', () => {
+    $hb.classList.remove('open');
+    $mmenu.classList.remove('open');
+  });
+});
+
+/* ─── TICKER ─────────────────────────────────────────────── */
+const tickerItems = [
+  '產品設計','Product Design','群眾募資','Crowdfunding',
+  '包裝設計','Brand Identity','內容行銷','Content Marketing',
+  '15+ 設計獎項','3000萬+ 累計群募','20+ 年資歷'
+];
+const $ticker = document.getElementById('ticker');
+const tickerHTML = [...tickerItems,...tickerItems].map(t =>
+  `<span class="ticker-item">${t}<span class="ticker-dot"></span></span>`
+).join('');
+$ticker.innerHTML = tickerHTML;
+
+/* ─── LANGUAGE ───────────────────────────────────────────── */
+let lang = 'zh';
+let currentFilter = 'all';
+
+function applyLang(l) {
+  lang = l;
+  document.querySelectorAll('[data-zh]').forEach(el => {
+    const txt = l === 'zh' ? el.dataset.zh : el.dataset.en;
+    if (txt !== undefined) el.innerHTML = txt;
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn =>
+    btn.classList.toggle('active', btn.dataset.lang === l)
+  );
+  renderWork(currentFilter);
+  renderAwards();
+  setTimeout(observeAll, 80);
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn =>
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang))
+);
+
+/* ─── HERO COUNTER ───────────────────────────────────────── */
+function runCounters() {
+  document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+    const target   = +el.dataset.target;
+    const prefix   = el.dataset.prefix || '';
+    const suffix   = el.dataset.suffix || '';
+    const duration = 1800;
+    const t0 = performance.now();
+    (function tick(now) {
+      const p = Math.min((now - t0) / duration, 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      el.textContent = prefix + Math.round(e * target) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    })(performance.now());
+  });
+}
+
+/* ─── HERO LOAD ──────────────────────────────────────────── */
+window.addEventListener('load', () => {
+  document.getElementById('hero').classList.add('hero-loaded');
+  runCounters();
+});
+
+/* ─── WORK DATA ──────────────────────────────────────────── */
+const CAT_LABEL = {
+  product:      { zh:'產品設計', en:'Product' },
+  crowdfunding: { zh:'群眾募資', en:'Crowdfunding' },
+  packaging:    { zh:'包裝設計', en:'Packaging' },
+  brand:        { zh:'品牌設計', en:'Brand Design' },
+};
+
+const works = [
+  // ── 產品設計 ──────────────────────────────────
+  { cat:'product',
+    zh:{ title:'轉轉擴香', client:'粹美自有品牌' },
+    en:{ title:'Rotary Diffuser', client:'Cuimei Original' },
+    images:[
+      '產品企劃類/轉轉擴香/rotary-diffuser_01.jpg',
+      '產品企劃類/轉轉擴香/rotary-diffuser_02.jpg',
+      '產品企劃類/轉轉擴香/rotary-diffuser_03.jpg',
+      '產品企劃類/轉轉擴香/rotary-diffuser_04.jpg',
+      '產品企劃類/轉轉擴香/rotary-diffuser_05.jpg',
+    ], wide:true },
+
+  { cat:'product',
+    zh:{ title:'HMM Exacto Scissors', client:'HMM × 粹美' },
+    en:{ title:'HMM Exacto Scissors', client:'HMM × Cuimei' },
+    images:[
+      '產品企劃類/HMM/hmm_01.png',
+      '產品企劃類/HMM/hmm_02.jpg',
+      '產品企劃類/HMM/hmm_03.webp',
+      '產品企劃類/HMM/hmm_04.webp',
+      '產品企劃類/HMM/hmm_06.png',
+    ], wide:false },
+
+  { cat:'product',
+    zh:{ title:'百年靈 × NC1981 香水瓶', client:'Breitling × NC1981' },
+    en:{ title:'Breitling × NC1981 Bottle', client:'Breitling × NC1981' },
+    images:[
+      '產品企劃類/百年靈 X NC1981香水瓶設計/breitling-nc1981_01.jpg',
+      '產品企劃類/百年靈 X NC1981香水瓶設計/breitling-nc1981_02.jpg',
+      '產品企劃類/百年靈 X NC1981香水瓶設計/breitling-nc1981_03.jpg',
+      '產品企劃類/百年靈 X NC1981香水瓶設計/breitling-nc1981_04.jpg',
+      '產品企劃類/百年靈 X NC1981香水瓶設計/breitling-nc1981_05.jpg',
+      '產品企劃類/百年靈 X NC1981香水瓶設計/breitling-nc1981_06.jpg',
+      '產品企劃類/百年靈 X NC1981香水瓶設計/breitling-nc1981_07.jpg',
+    ], wide:false },
+
+  { cat:'product',
+    zh:{ title:'AKAME 線香座', client:'AKAME' },
+    en:{ title:'AKAME Incense Holder', client:'AKAME' },
+    images:[
+      '產品企劃類/akame線香座/akame-incense_01.jpg',
+      '產品企劃類/akame線香座/akame-incense_02.jpg',
+      '產品企劃類/akame線香座/akame-incense_03.jpg',
+      '產品企劃類/akame線香座/akame-incense_04.jpg',
+    ], wide:false },
+
+  { cat:'product',
+    zh:{ title:'NC1981 巧香磚', client:'NC1981' },
+    en:{ title:'NC1981 Scent Block', client:'NC1981' },
+    images:[
+      '產品企劃類/NC1981巧香磚/nc1981-brick_01.jpg',
+      '產品企劃類/NC1981巧香磚/nc1981-brick_02.jpg',
+      '產品企劃類/NC1981巧香磚/nc1981-brick_03.jpg',
+      '產品企劃類/NC1981巧香磚/nc1981-brick_04.jpg',
+    ], wide:false },
+
+  { cat:'product',
+    zh:{ title:'NC1981 調香週報', client:'NC1981' },
+    en:{ title:'NC1981 Scent Weekly', client:'NC1981' },
+    images:[
+      '產品企劃類/NC1981 調香週報/nc1981-weekly_01.jpg',
+      '產品企劃類/NC1981 調香週報/nc1981-weekly_02.jpg',
+      '產品企劃類/NC1981 調香週報/nc1981-weekly_03.jpg',
+      '產品企劃類/NC1981 調香週報/nc1981-weekly_04.jpg',
+    ], wide:false },
+
+  { cat:'product',
+    zh:{ title:'Ride ON 50 週年紀念包', client:'Giant × 粹美' },
+    en:{ title:'Ride ON 50th Anniversary Set', client:'Giant × Cuimei' },
+    images:[
+      '產品企劃類/Ride ON 50週年紀念包/rideon-bag_01.jpg',
+      '產品企劃類/Ride ON 50週年紀念包/rideon-bag_02.jpg',
+      '產品企劃類/Ride ON 50週年紀念包/rideon-bag_03.png',
+      '產品企劃類/Ride ON 50週年紀念包/rideon-bag_04.png',
+      '產品企劃類/Ride ON 50週年紀念包/rideon-bag_05.png',
+    ], wide:false },
+
+  // ── 包裝設計 ──────────────────────────────────
+  { cat:'packaging',
+    zh:{ title:'NC1981 山林島嶼香水', client:'百年靈 × NC1981' },
+    en:{ title:'NC1981 Forest Island Perfume', client:'Breitling × NC1981' },
+    images:[
+      '產品企劃類/NC1981 山林島嶼香水/nc1981-forest_01.jpg',
+      '產品企劃類/NC1981 山林島嶼香水/nc1981-forest_05.jpg',
+    ], wide:true },
+
+  { cat:'packaging',
+    zh:{ title:'AKAME × 慢慢弄', client:'AKAME × ManManoue' },
+    en:{ title:'AKAME × ManManoue', client:'AKAME × ManManoue' },
+    images:[
+      '包裝設計類/AKAME X 慢慢弄｜ Mabula手工乳清皂/akame-mabula_01.png',
+      '包裝設計類/AKAME X 慢慢弄｜ Mabula手工乳清皂/akame-mabula_02.png',
+    ], wide:false },
+
+  { cat:'packaging',
+    zh:{ title:'FLUSSO 低碳環保包裝', client:'FLUSSO × 粹美' },
+    en:{ title:'FLUSSO Eco Packaging', client:'FLUSSO × Cuimei' },
+    images:[
+      '包裝設計類/FLUSSO 低碳包裝設計/flusso-eco_01.jpg',
+      '包裝設計類/FLUSSO 低碳包裝設計/flusso-eco_02.jpg',
+      '包裝設計類/FLUSSO 低碳包裝設計/flusso-eco_03.jpg',
+    ], wide:false },
+
+  // ── 群眾募資（依金額高至低排序） ────────────────
+  { cat:'crowdfunding', amount:5115060,
+    zh:{ title:'FLUSSO 護駕眼鏡', client:'FLUSSO × 粹美代操' },
+    en:{ title:'FLUSSO Sports Glasses', client:'FLUSSO × Cuimei' },
+    images:['群眾募資代操/flusso-sport_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:4616137,
+    zh:{ title:'FLUSSO 第二代瞬適眼鏡', client:'FLUSSO × 粹美代操' },
+    en:{ title:'FLUSSO 2nd Gen Glasses', client:'FLUSSO × Cuimei' },
+    images:['群眾募資代操/flusso-v2_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:2794353,
+    zh:{ title:'明想正念日曆 Bit By Bit 2025', client:'粹美自有品牌' },
+    en:{ title:'Bit By Bit Mindful Calendar 2025', client:'Cuimei Original' },
+    images:['群眾募資代操/bitbybit-cal_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:2521715,
+    zh:{ title:'Studio Smoll 巧摺長短夾', client:'Studio Smoll × 粹美代操' },
+    en:{ title:'Studio Smoll Origami Wallet', client:'Studio Smoll × Cuimei' },
+    images:['群眾募資代操/studiosmoll-wallet_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:2391966,
+    zh:{ title:'Studio Smoll 摺摺立方包', client:'Studio Smoll × 粹美代操' },
+    en:{ title:'Studio Smoll Cube Bag', client:'Studio Smoll × Cuimei' },
+    images:['群眾募資代操/studiosmoll-cube_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:2267832,
+    zh:{ title:'HMM 反正剪刀', client:'HMM × 粹美代操' },
+    en:{ title:'HMM Reversible Scissors', client:'HMM × Cuimei' },
+    images:['群眾募資代操/hmm-scissors-r_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:1866402,
+    zh:{ title:'dxpresso 費洛蒙香水', client:'dxpresso × 粹美' },
+    en:{ title:'dxpresso Pheromone Perfume', client:'dxpresso × Cuimei' },
+    images:[
+      '產品企劃類/dxpresso 費洛蒙香水/dxpresso_01.png',
+      '產品企劃類/dxpresso 費洛蒙香水/dxpresso_02.png',
+      '產品企劃類/dxpresso 費洛蒙香水/dxpresso_03.png',
+      '產品企劃類/dxpresso 費洛蒙香水/dxpresso_04.png',
+      '產品企劃類/dxpresso 費洛蒙香水/dxpresso_05.png',
+    ], contain:false },
+
+  { cat:'crowdfunding', amount:1245475,
+    zh:{ title:'HMM 精準剪刀', client:'HMM × 粹美代操' },
+    en:{ title:'HMM Precision Scissors', client:'HMM × Cuimei' },
+    images:['群眾募資代操/hmm-scissors-p_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:1127586,
+    zh:{ title:'口袋兔刮痧板', client:'粹美代操' },
+    en:{ title:'Pocket Bunny Gua Sha', client:'Cuimei' },
+    images:['群眾募資代操/pocket-bunny_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:1016825,
+    zh:{ title:'Studio Smoll 摺摺革層包', client:'Studio Smoll × 粹美代操' },
+    en:{ title:'Studio Smoll Leather Bag', client:'Studio Smoll × Cuimei' },
+    images:['群眾募資代操/studiosmoll-layer_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:493360,
+    zh:{ title:'FLUSSO 第三代瞬適眼鏡', client:'FLUSSO × 粹美代操' },
+    en:{ title:'FLUSSO 3rd Gen Glasses', client:'FLUSSO × Cuimei' },
+    images:['群眾募資代操/flusso-v3_01.png'], contain:true },
+
+  { cat:'crowdfunding', amount:245940,
+    zh:{ title:'踩踩獸 Fooot Monster', client:'粹美代操' },
+    en:{ title:'Fooot Monster', client:'Cuimei' },
+    images:['群眾募資代操/footmonster_01.png'], contain:true },
+
+  // ── 品牌設計（自有品牌） ───────────────────────
+  { cat:'brand',
+    zh:{ title:'口袋兔刮痧板', client:'粹美自有品牌' },
+    en:{ title:'Pocket Bunny Gua Sha Board', client:'Cuimei Original Brand' },
+    images:[
+      '自有品牌/口袋兔刮痧板/pocket-bunny_01.png',
+      '自有品牌/口袋兔刮痧板/pocket-bunny_02.png',
+      '自有品牌/口袋兔刮痧板/pocket-bunny_03.png',
+      '自有品牌/口袋兔刮痧板/pocket-bunny_04.png',
+      '自有品牌/口袋兔刮痧板/pocket-bunny_05.png',
+    ], wide:false },
+
+  { cat:'brand',
+    zh:{ title:'舒弧刮痧板 SHUHU', client:'粹美自有品牌' },
+    en:{ title:'SHUHU Gua Sha Board', client:'Cuimei Original Brand' },
+    images:[
+      '自有品牌/舒弧刮痧板/shuhu_01.png',
+      '自有品牌/舒弧刮痧板/shuhu_02.png',
+      '自有品牌/舒弧刮痧板/shuhu_03.png',
+      '自有品牌/舒弧刮痧板/shuhu_04.png',
+      '自有品牌/舒弧刮痧板/shuhu_05.png',
+      '自有品牌/舒弧刮痧板/shuhu_06.png',
+      '自有品牌/舒弧刮痧板/shuhu_07.png',
+    ], wide:true },
+
+  { cat:'brand',
+    zh:{ title:'踩踩獸 足底滾壓球', client:'粹美自有品牌' },
+    en:{ title:'Footroll Beast', client:'Cuimei Original Brand' },
+    images:[
+      '自有品牌/踩踩獸足底滾壓球/footroll_01.png',
+      '自有品牌/踩踩獸足底滾壓球/footroll_02.png',
+      '自有品牌/踩踩獸足底滾壓球/footroll_03.png',
+      '自有品牌/踩踩獸足底滾壓球/footroll_04.png',
+      '自有品牌/踩踩獸足底滾壓球/footroll_05.png',
+      '自有品牌/踩踩獸足底滾壓球/footroll_06.png',
+      '自有品牌/踩踩獸足底滾壓球/footroll_07.png',
+      '自有品牌/踩踩獸足底滾壓球/footroll_08.png',
+    ], wide:false },
+
+  { cat:'brand',
+    zh:{ title:'明想正念日曆 2025', client:'粹美自有品牌' },
+    en:{ title:'Mindful Calendar 2025', client:'Cuimei Original Brand' },
+    images:[
+      '自有品牌/明想正念/mindful-cal_01.jpg',
+      '自有品牌/明想正念/mindful-cal_02.png',
+      '自有品牌/明想正念/mindful-cal_03.png',
+      '自有品牌/明想正念/mindful-cal_05.png',
+      '自有品牌/明想正念/mindful-cal_06.png',
+      '自有品牌/明想正念/mindful-cal_12.jpg',
+      '自有品牌/明想正念/mindful-cal_13.jpg',
+    ], wide:false },
+
+  { cat:'brand',
+    zh:{ title:'明想正念 每日限動', client:'粹美自有品牌' },
+    en:{ title:'Mindful Daily Reels', client:'Cuimei Original Brand' },
+    images:[
+      '自有品牌/明想正念電子日曆/mindful-reel_01.mp4',
+      '自有品牌/明想正念電子日曆/mindful-reel_02.mp4',
+      '自有品牌/明想正念電子日曆/mindful-reel_03.mp4',
+      '自有品牌/明想正念電子日曆/mindful-reel_04.mp4',
+      '自有品牌/明想正念電子日曆/mindful-reel_05.mp4',
+      '自有品牌/明想正念電子日曆/mindful-reel_06.mp4',
+    ], wide:false },
+];
+
+function encPath(p) { return p.replace(/ /g, '%20'); }
+
+/* ── 判斷是否為影片 ── */
+function isVideo(src) {
+  return /\.(mp4|webm|mov)$/i.test(src);
+}
+
+/* ── 建立單一 slide（圖或影片）── */
+function makeSlide(src, active) {
+  const cls = 'work-img-slide' + (active ? ' active' : '');
+  if (isVideo(src)) {
+    return `<video class="${cls}" src="${encPath(src)}" muted loop playsinline preload="metadata"></video>`;
+  }
+  return `<img class="${cls}" src="${encPath(src)}" alt="" loading="lazy" onerror="this.classList.add('broken')">`;
+}
+
+/* ── 建立單一 card（含 hover 輪播） ── */
+function makeCard(w, globalIdx) {
+  const t = w[lang] || w.zh;
+  const imgs = w.images || [];
+  const catLabel = CAT_LABEL[w.cat][lang];
+  const hasVideo = imgs.some(isVideo);
+
+  const card = document.createElement('div');
+  card.className = 'work-card' + (w.wide ? ' wide' : '') + (w.contain ? ' contain' : '');
+
+  // dots HTML
+  const dotsHTML = imgs.length > 1
+    ? `<div class="img-dots">${imgs.map((_, i) =>
+        `<span class="img-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>`
+    : '';
+
+  // 影片標示 badge
+  const vidBadge = hasVideo
+    ? `<span class="work-vid-badge">▶ VIDEO</span>`
+    : '';
+
+  const slidesHTML = imgs.map((src, i) => makeSlide(src, i === 0)).join('');
+
+  const amountHTML = w.amount
+    ? `<div class="work-card-amount">NT$ ${w.amount.toLocaleString()}</div>`
+    : '';
+
+  card.innerHTML = `
+    <div class="work-img">${slidesHTML}</div>
+    ${vidBadge}
+    <span class="work-cat-badge">${catLabel}</span>
+    <div class="work-overlay">
+      <div class="work-card-title">${t.title}</div>
+      <div class="work-card-client">${t.client}</div>
+      ${amountHTML}
+    </div>
+    ${dotsHTML}`;
+
+  const slides = card.querySelectorAll('.work-img-slide');
+  const dots   = card.querySelectorAll('.img-dot');
+  let idx = 0;
+
+  // 播放當前 slide 的影片（若是影片）
+  function playActive() {
+    const el = slides[idx];
+    if (el && el.tagName === 'VIDEO') el.play().catch(() => {});
+  }
+  function pauseAll() {
+    slides.forEach(el => { if (el.tagName === 'VIDEO') { el.pause(); el.currentTime = 0; } });
+  }
+
+  // 純影片卡片：hover 直接播放
+  if (hasVideo && imgs.length === 1) {
+    card.addEventListener('mouseenter', playActive);
+    card.addEventListener('mouseleave', pauseAll);
+  }
+
+  // 多張（圖 or 影片混合）：左右滑動切換
+  if (imgs.length > 1) {
+    card.addEventListener('mouseenter', playActive);
+
+    card.addEventListener('mousemove', (e) => {
+      const rect   = card.getBoundingClientRect();
+      const relX   = (e.clientX - rect.left) / rect.width;
+      const newIdx = Math.min(Math.floor(relX * imgs.length), imgs.length - 1);
+      if (newIdx !== idx) {
+        if (slides[idx].tagName === 'VIDEO') { slides[idx].pause(); slides[idx].currentTime = 0; }
+        slides[idx].classList.remove('active');
+        idx = newIdx;
+        slides[idx].classList.add('active');
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        playActive();
+      }
+    });
+
+    card.addEventListener('mouseleave', () => {
+      pauseAll();
+      slides[idx].classList.remove('active');
+      idx = 0;
+      slides[0].classList.add('active');
+      dots.forEach((d, i) => d.classList.toggle('active', i === 0));
+    });
+
+    // 手機：下滑換圖
+    if ('ontouchstart' in window) {
+      function syncByScroll() {
+        const rect = card.getBoundingClientRect();
+        const vh   = window.innerHeight;
+        const progress = (vh - rect.top) / (vh + rect.height);
+        const newIdx = Math.min(Math.max(Math.floor(progress * imgs.length), 0), imgs.length - 1);
+        if (newIdx !== idx) {
+          if (slides[idx].tagName === 'VIDEO') { slides[idx].pause(); slides[idx].currentTime = 0; }
+          slides[idx].classList.remove('active');
+          idx = newIdx;
+          slides[idx].classList.add('active');
+          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        }
+      }
+      window.addEventListener('scroll', syncByScroll, { passive:true });
+    }
+  }
+
+  // stagger in
+  setTimeout(() => card.classList.add('in'), globalIdx * 55 + 30);
+  return card;
+}
+
+/* ── 分組標題列 ── */
+function makeGroupHeader(labelZh, labelEn) {
+  const div = document.createElement('div');
+  div.className = 'work-group-header';
+  div.innerHTML = `
+    <span class="work-group-label" data-zh="${labelZh}" data-en="${labelEn}">${lang === 'zh' ? labelZh : labelEn}</span>
+    <div class="work-group-line"></div>`;
+  return div;
+}
+
+/* ── 群眾募資大卡（滑鼠位置切換）── */
+function makeBigCFCard(list) {
+  const card = document.createElement('div');
+  card.className = 'work-card cf-bigcard';
+
+  // 第一張的 text
+  function tOf(w) { return w[lang] || w.zh; }
+
+  const slidesHTML = list.map((w, i) => {
+    const src = encPath(w.images[0]);
+    return `<img class="work-img-slide${i === 0 ? ' active' : ''}" src="${src}" alt="" loading="lazy" onerror="this.classList.add('broken')">`;
+  }).join('');
+
+  const dotsHTML = `<div class="img-dots">${list.map((_, i) =>
+    `<span class="img-dot${i === 0 ? ' active' : ''}"></span>`).join('')}</div>`;
+
+  const t0 = tOf(list[0]);
+  card.innerHTML = `
+    <div class="work-img">${slidesHTML}</div>
+    <span class="work-cat-badge">${CAT_LABEL.crowdfunding[lang]}</span>
+    <div class="work-overlay">
+      <div class="work-card-title cf-dyn-title">${t0.title}</div>
+      <div class="work-card-client cf-dyn-client">${t0.client}</div>
+      <div class="work-card-amount cf-dyn-amount">NT$ ${list[0].amount.toLocaleString()}</div>
+    </div>
+    ${dotsHTML}`;
+
+  const slides   = card.querySelectorAll('.work-img-slide');
+  const dots     = card.querySelectorAll('.img-dot');
+  const titleEl  = card.querySelector('.cf-dyn-title');
+  const clientEl = card.querySelector('.cf-dyn-client');
+  const amountEl = card.querySelector('.cf-dyn-amount');
+  let idx = 0;
+
+  function setIdx(i) {
+    if (i === idx) return;
+    slides[idx].classList.remove('active');
+    dots[idx].classList.remove('active');
+    idx = i;
+    slides[idx].classList.add('active');
+    dots[idx].classList.add('active');
+    const t = tOf(list[idx]);
+    titleEl.textContent  = t.title;
+    clientEl.textContent = t.client;
+    amountEl.textContent = list[idx].amount ? `NT$ ${list[idx].amount.toLocaleString()}` : '';
+  }
+
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    setIdx(Math.min(Math.floor((e.clientX - r.left) / r.width * list.length), list.length - 1));
+  });
+
+  card.addEventListener('mouseleave', () => {
+    slides[idx].classList.remove('active');
+    dots[idx].classList.remove('active');
+    idx = 0;
+    slides[0].classList.add('active');
+    dots[0].classList.add('active');
+    const t = tOf(list[0]);
+    titleEl.textContent  = t.title;
+    clientEl.textContent = t.client;
+    amountEl.textContent = `NT$ ${list[0].amount.toLocaleString()}`;
+  });
+
+  // 手機：下滑換專案
+  if ('ontouchstart' in window) {
+    function cfSyncByScroll() {
+      const r  = card.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const progress = (vh - r.top) / (vh + r.height);
+      setIdx(Math.min(Math.max(Math.floor(progress * list.length), 0), list.length - 1));
+    }
+    window.addEventListener('scroll', cfSyncByScroll, { passive:true });
+  }
+
+  setTimeout(() => card.classList.add('in'), 30);
+  return card;
+}
+
+/* ── 主渲染函式 ── */
+function renderWork(filter) {
+  currentFilter = filter;
+  const $grid = document.getElementById('workGrid');
+  $grid.innerHTML = '';
+
+  function sortedList(list) {
+    return list.some(w => w.amount != null)
+      ? list.slice().sort((a, b) => (b.amount || 0) - (a.amount || 0))
+      : list;
+  }
+
+  function makeCFInner(list) {
+    const inner = document.createElement('div');
+    inner.className = 'work-grid-inner';
+    inner.appendChild(makeBigCFCard(list));
+    return inner;
+  }
+
+  if (filter !== 'all') {
+    // 單一分類：不分組
+    const list = sortedList(works.filter(w => w.cat === filter));
+    if (filter === 'crowdfunding') {
+      $grid.appendChild(makeCFInner(list));
+    } else {
+      const inner = document.createElement('div');
+      inner.className = 'work-grid-inner';
+      list.forEach((w, i) => inner.appendChild(makeCard(w, i)));
+      $grid.appendChild(inner);
+    }
+  } else {
+    // 全部：分三組
+    const groups = [
+      { cats:['brand'],               zh:'品牌設計', en:'Brand Design' },
+      { cats:['product','packaging'], zh:'設計作品', en:'Design Work' },
+      { cats:['crowdfunding'],        zh:'群眾募資', en:'Crowdfunding' },
+    ];
+    let globalIdx = 0;
+    groups.forEach(g => {
+      const list = sortedList(works.filter(w => g.cats.includes(w.cat)));
+      if (!list.length) return;
+
+      const group = document.createElement('div');
+      group.className = 'work-group';
+      group.appendChild(makeGroupHeader(g.zh, g.en));
+
+      if (g.cats.includes('crowdfunding')) {
+        group.appendChild(makeCFInner(list));
+      } else {
+        const inner = document.createElement('div');
+        inner.className = 'work-grid-inner';
+        list.forEach(w => { inner.appendChild(makeCard(w, globalIdx)); globalIdx++; });
+        group.appendChild(inner);
+      }
+      $grid.appendChild(group);
+    });
+  }
+}
+
+/* filter click */
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderWork(btn.dataset.filter);
+});
+
+/* ─── AWARDS DATA ─────────────────────────────────────────── */
+const awards = [
+  { yr:'2023', zh:'金點設計獎',             en:'Golden Pin Design Award',       item:'轉轉擴香 / Rotary Diffuser' },
+  { yr:'2022', zh:'台灣香水類募資最高紀錄',   en:'Taiwan Perfume Crowdfunding Record', item:'dxpresso' },
+  { yr:'2019', zh:'NYNOW Best Overall Collection', en:'NYNOW Best Overall Collection', item:'' },
+  { yr:'2019', zh:'金點設計獎 年度最佳設計',  en:'Golden Pin Best of Year',       item:'W Glass Amber' },
+  { yr:'2019', zh:'金點設計獎 永續循環特別獎', en:'Golden Pin Sustainable Cycle',  item:'W Glass Amber' },
+  { yr:'2018', zh:'iF Design Award',         en:'iF Design Award',                item:'Slide' },
+  { yr:'2018', zh:'金點設計獎 + 文創精品獎',  en:'Golden Pin + Creative Award',   item:'Slide' },
+  { yr:'2017', zh:'金點設計獎 年度最佳設計',  en:'Golden Pin Best of Year',       item:'HMM Scissors' },
+  { yr:'2014', zh:'Red Dot Design Award',    en:'Red Dot Design Award',           item:'Rule/one' },
+];
+
+function renderAwards() {
+  const $g = document.getElementById('awardsGrid');
+  $g.innerHTML = '';
+  awards.forEach(a => {
+    const row = document.createElement('div');
+    row.className = 'award-row';
+    row.innerHTML = `
+      <span class="award-year">${a.yr}</span>
+      <div class="award-info">
+        <div class="award-name">${lang === 'zh' ? a.zh : a.en}</div>
+        ${a.item ? `<div class="award-item">${a.item}</div>` : ''}
+      </div>`;
+    $g.appendChild(row);
+  });
+  observeAwards();
+}
+
+function observeAwards() {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('in'), i * 70);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold:0.1 });
+  document.querySelectorAll('.award-row').forEach(r => io.observe(r));
+}
+
+/* ─── PARTNERS ───────────────────────────────────────────── */
+const partners = [
+  { name:'ZOJIRUSHI 象印',   logo:'客戶logo/image (15).png' },
+  { name:'GIANT 捷安特',     logo:'客戶logo/image (16).png' },
+  { name:'AKAME',            logo:'客戶logo/image (17).png' },
+  { name:'NC1981',           logo:'客戶logo/image (18).png' },
+  { name:'FLUSSO',           logo:'客戶logo/image (19).png' },
+  { name:'Studio Smoll',     logo:'客戶logo/image (20).png' },
+  { name:'COSMOSHIP 宇宙小艇',logo:'客戶logo/image (21).png' },
+];
+
+function renderPartners() {
+  const $w = document.getElementById('logosWrap');
+  $w.innerHTML = '';
+  partners.forEach(p => {
+    const img = document.createElement('img');
+    img.className  = 'partner-logo';
+    img.src        = encPath(p.logo);
+    img.alt        = p.name;
+    img.onerror    = function(){
+      this.style.display = 'none';
+      const span = document.createElement('span');
+      span.className   = 'partner-fallback';
+      span.textContent = p.name;
+      $w.appendChild(span);
+    };
+    $w.appendChild(img);
+  });
+}
+
+/* ─── SCROLL REVEAL ──────────────────────────────────────── */
+function observeAll() {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold:0.08, rootMargin:'0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el));
+}
+
+/* ─── INIT ───────────────────────────────────────────────── */
+renderWork('all');
+renderAwards();
+renderPartners();
+observeAll();
+setTimeout(observeAll, 200); // catch late-rendered
+</script>
+</body>
+</html>
