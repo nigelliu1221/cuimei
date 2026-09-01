@@ -1184,6 +1184,20 @@ const CAT_LABEL = {
 
 const works = [
   // ── 產品設計 ──────────────────────────────────
+  { cat:'product', cats:['product','packaging'],
+    catLabel:{ zh:'產品與包裝', en:'Product & Packaging' },
+    zh:{ title:'HOKAS 本色剪刀系列', client:'HOKAS × 粹美' },
+    en:{ title:'HOKAS Origin Scissors', client:'HOKAS × Cuimei' },
+    images:[
+      'img/hokas/hokas_01.jpg',
+      'img/hokas/hokas_02.jpg',
+      'img/hokas/hokas_03.jpg',
+      'img/hokas/hokas_04.jpg',
+      'img/hokas/hokas_05.jpg',
+      'img/hokas/hokas_06.jpg',
+      'img/hokas/hokas_07.jpg',
+    ], wide:true },
+
   { cat:'product',
     zh:{ title:'研石造物 大理石漢堡', client:'研石造物 × 粹美' },
     en:{ title:'Geology Burger', client:'Yanshi × Cuimei' },
@@ -1477,7 +1491,7 @@ function makeSlide(src, active) {
 function makeCard(w, globalIdx) {
   const t = w[lang] || w.zh;
   const imgs = w.images || [];
-  const catLabel = CAT_LABEL[w.cat][lang];
+  const catLabel = (w.catLabel || CAT_LABEL[w.cat])[lang];
   const hasVideo = imgs.some(isVideo);
 
   const card = document.createElement('div');
@@ -1684,7 +1698,7 @@ function renderWork(filter) {
 
   if (filter !== 'all') {
     // 單一分類：不分組
-    const list = sortedList(works.filter(w => w.cat === filter));
+    const list = sortedList(works.filter(w => (w.cats || [w.cat]).includes(filter)));
     if (filter === 'crowdfunding') {
       $grid.appendChild(makeCFInner(list));
     } else {
@@ -1702,7 +1716,7 @@ function renderWork(filter) {
     ];
     let globalIdx = 0;
     groups.forEach(g => {
-      const list = sortedList(works.filter(w => g.cats.includes(w.cat)));
+      const list = sortedList(works.filter(w => (w.cats || [w.cat]).some(c => g.cats.includes(c))));
       if (!list.length) return;
 
       const group = document.createElement('div');
