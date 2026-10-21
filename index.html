@@ -798,6 +798,7 @@ footer {
   .logos-wrap { gap:20px; }
 }
 </style>
+<link rel="stylesheet" href="brand-film.css?v=youtube-hover-2">
 </head>
 <body>
 
@@ -878,6 +879,7 @@ footer {
 
     <div class="hero-cta fade-up d4">
       <a href="#work"    class="btn btn-primary"  data-zh="查看作品" data-en="View Work">查看作品</a>
+      <a href="#brand-film" class="btn btn-outline" data-zh="觀看形象影片 ↗" data-en="Watch Our Film ↗">觀看形象影片 ↗</a>
       <a href="#contact" class="btn btn-outline"  data-zh="開始合作" data-en="Get In Touch">開始合作</a>
     </div>
 
@@ -896,6 +898,28 @@ footer {
       </div>
     </div>
   </div>
+</section>
+
+<!-- Brand film -->
+<section id="brand-film" aria-labelledby="brand-film-title">
+  <div class="brand-film-heading">
+    <div>
+      <span class="sec-label" data-zh="關於粹美 · 形象影片" data-en="About Cuimei · Brand Film">關於粹美 · 形象影片</span>
+      <h2 id="brand-film-title" class="sec-title" data-zh="讓想法，成為真實。" data-en="From idea to reality.">讓想法，成為真實。</h2>
+    </div>
+    <p class="brand-film-intro" data-zh="從產品、品牌到市場，<br>用 49 秒，看見粹美走過的每一步。" data-en="From products and brands to market.<br>49 seconds of ideas brought to life.">從產品、品牌到市場，<br>用 49 秒，看見粹美走過的每一步。</p>
+  </div>
+  <div class="brand-film-player">
+    <img class="brand-film-poster" src="assets/brand-film/cuimei-showreel-poster.jpg" alt="" width="1920" height="1080" loading="lazy">
+    <button class="brand-film-play" type="button">
+      <span class="brand-film-play-icon" aria-hidden="true">▶</span>
+      <span data-zh="有聲播放" data-en="Play with sound">有聲播放</span>
+    </button>
+  </div>
+  <div class="brand-film-caption"><span>CUIMEI DESIGN — SELECTED WORKS</span><span>00:49 / CUIMEI FILM</span></div>
+  <p class="brand-film-hint" data-zh="滑過靜音預覽，點擊有聲播放。" data-en="Hover to preview. Click to play with sound.">滑過靜音預覽，點擊有聲播放。</p>
+  <p class="brand-film-error" hidden role="status" data-zh="影片暫時無法載入，請重新整理或使用下方 YouTube 連結。" data-en="The film could not load. Please refresh or use the YouTube link below.">影片暫時無法載入，請重新整理或使用下方 YouTube 連結。</p>
+  <p class="brand-film-external"><a href="https://youtu.be/oDCoKAREKss" target="_blank" rel="noopener" data-zh="在 YouTube 觀看 ↗" data-en="Watch on YouTube ↗">在 YouTube 觀看 ↗</a></p>
 </section>
 
 <!-- ============================================================
@@ -1839,5 +1863,6 @@ renderPartners();
 observeAll();
 setTimeout(observeAll, 200); // catch late-rendered
 </script>
+<script src="brand-film.js?v=youtube-hover-2"></script>
 </body>
 </html>

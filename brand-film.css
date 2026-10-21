@@ -1,0 +1,26 @@
+#brand-film { padding-top: clamp(36px, 6vw, 88px); scroll-margin-top: 72px; }
+.brand-film-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: 32px; }
+.brand-film-heading .sec-title { margin-bottom: 0; }
+.brand-film-intro { color: var(--text-sec); font-size: 13px; line-height: 2; letter-spacing: .04em; }
+.brand-film-player { position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 202px; background: #111716; border: 1px solid var(--border); }
+.brand-film-poster, .brand-film-player iframe, .brand-film-player video { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; border: 0; }
+.brand-film-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 13px; padding: 16px 24px; border: 1px solid rgba(255,255,255,.5); border-radius: 100px; background: rgba(250,249,247,.94); color: #1a1a1a; font: inherit; font-size: 13px; letter-spacing: .08em; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .2s; }
+.brand-film-play:hover { background: #fff; }
+.brand-film-play:focus-visible { outline: 3px solid var(--accent); outline-offset: 6px; }
+.brand-film-play-icon { font-size: 15px; }
+.brand-film-play[hidden], .brand-film-poster[hidden] { display: none; }
+.brand-film-caption { display: flex; justify-content: space-between; gap: 16px; padding-top: 15px; color: var(--text-sec); font-size: 10px; letter-spacing: .14em; }
+.brand-film-external { margin-top: 14px; font-size: 11px; text-align: right; }
+.brand-film-external a { color: var(--text); text-underline-offset: 4px; cursor: pointer; }
+@media (max-width: 700px) {
+  .brand-film-heading { flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 24px; }
+  .brand-film-heading .sec-title { font-size: clamp(25px, 6.5vw, 38px); }
+  .brand-film-intro { font-size: 12px; }
+  .brand-film-play { padding: 12px 18px; font-size: 12px; }
+  .brand-film-caption { flex-wrap: wrap; font-size: 9px; letter-spacing: .08em; gap: 8px; }
+}
+
+.brand-film-hint { margin-top: 14px; font-size: 11px; color: var(--text-sec); }
+.brand-film-error { margin-top: 12px; font-size: 12px; color: var(--text-sec); }
+.brand-film-error[hidden] { display: none; }
+@media (hover: none), (prefers-reduced-motion: reduce) { .brand-film-hint { display: none; } }
